@@ -10,7 +10,7 @@ public:
 	//关闭网络
 	 void CloseNet() ;
 	//发送数据
-	 bool SendData(long lSendlp, const char* buf, int nLen);
+	 bool SendData(long lSendIp, const char* buf, int nLen);
 	//处理数据
-	 void DealData(long lSendlp, const char* buf, int nLen) ;
+	 void DealData(long lSendIp, const char* buf, int nLen) ;
 };

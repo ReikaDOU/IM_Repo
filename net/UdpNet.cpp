@@ -8,7 +8,7 @@ UdpNet::UdpNet(INetMediator* pMediator):m_sock(INVALID_SOCKET),m_hTHreadHandle(0
 }
 UdpNet::~UdpNet()//使用时，父类指针指向子类，使用虚析构
 {
-	UnlnitNet();
+	UnInitNet();
 }
 //初始化网络
 bool UdpNet::InitNet()
@@ -28,7 +28,7 @@ bool UdpNet::InitNet()
 	m_sock= socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (INVALID_SOCKET == m_sock)
 	{
-		UnlnitNet();
+		UnInitNet();
 		return false;
 	}
 
@@ -45,7 +45,7 @@ bool UdpNet::InitNet()
 	result = bind(m_sock, (sockaddr*)&service, sizeof(service));
 	if (SOCKET_ERROR == result)
 	{
-		UnlnitNet();
+		UnInitNet();
 		return 1;
 	}
 
@@ -66,7 +66,7 @@ unsigned int _stdcall UdpNet::RecvThread(void* lpVoid)
 	return 1;
 }
 //关闭网络
-void UdpNet::UnlnitNet()
+void UdpNet::UnInitNet()
 {
 	//退出线程
 	m_isStop = true;
@@ -88,12 +88,12 @@ void UdpNet::UnlnitNet()
 
 }
 //发送数据
-bool UdpNet::SendData(long lSendlp, const char* buf, int nLen)
+bool UdpNet::SendData(long lSendIp, const char* buf, int nLen)
 {
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(DEF_UDP_PORT);
-	addr.sin_addr.S_un.S_addr = lSendlp;
+	addr.sin_addr.S_un.S_addr = lSendIp;
 	if (sendto(m_sock, buf, nLen, 0, (sockaddr*)&addr, sizeof(addr)) <= 0)
 	{
 		return false;

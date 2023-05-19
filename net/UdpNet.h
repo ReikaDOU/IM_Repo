@@ -9,9 +9,9 @@ public:
 	//初始化网络
 	bool InitNet();
 	//关闭网络
-	void UnlnitNet();
+	void UnInitNet();
 	//发送数据
-	bool SendData(long lSendlp, const char* buf, int nLen);
+	bool SendData(long lSendIp, const char* buf, int nLen);
 protected:
 	static unsigned int  _stdcall RecvThread(void* lpVoid);
 	//接收数据

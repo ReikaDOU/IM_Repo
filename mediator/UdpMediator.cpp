@@ -23,9 +23,9 @@ void UdpMediator::CloseNet()
 	m_pNet->UnlnitNet();
 }
 //发送数据
-bool UdpMediator::SendData(long lSendlp, const char* buf, int nLen)
+bool UdpMediator::SendData(long lSendIp, const char* buf, int nLen)
 {
-	if (!m_pNet->SendData(lSendlp, buf, nLen))
+	if (!m_pNet->SendData(lSendIp, buf, nLen))
 	{
 		return false;
 	}
@@ -34,7 +34,7 @@ bool UdpMediator::SendData(long lSendlp, const char* buf, int nLen)
 //处理数据
 #include<iostream>
 using namespace std;
-void UdpMediator::DealData(long lSendlp, const char* buf, int nLen)
+void UdpMediator::DealData(long lSendIp, const char* buf, int nLen)
 {
 	cout << buf << endl;
 }

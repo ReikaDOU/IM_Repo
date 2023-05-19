@@ -14,6 +14,11 @@
 #define DEF_PROTOCAL_DATEINFO_RQ (DEF_PROTOCAL_BASE+4)
 #define DEF_PROTOCAL_DATEINFO_RS (DEF_PROTOCAL_BASE+5)
 
+//TCP--------------------------------
+#define DEF_TCP_PORT (12341)
+#define DEF_SERVER_IP ("198.168.126.1")
+
+
 //协议结构
 //上线通知，回复//协议头、名字、id...
 struct STRU_ONLINE_RS
