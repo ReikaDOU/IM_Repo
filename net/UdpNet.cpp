@@ -2,7 +2,7 @@
 #include"UdpNet.h"
 #include<process.h>
 #include"INetMediator.h"
-UdpNet::UdpNet(INetMediator* pMediator):m_sock(INVALID_SOCKET),m_hTHreadHandle(0),m_isStop(false)
+UdpNet::UdpNet(INetMediator* pMediator):m_sock(INVALID_SOCKET),m_hThreadHandle(0),m_isStop(false)
 {
 	m_pMediator = pMediator;
 }
@@ -54,7 +54,7 @@ bool UdpNet::InitNet()
 	/* C/C++ RunTime库 strcpy 创建内存块 CreateThread创建的线程不会回收内存块，造成内存泄露
 	ExitThread推出线程  _beginthreadex底层也是调用的CreateThread，退出时调用ExitThread，并且回收创建的内存块	*/
 	
-	m_hTHreadHandle = (HANDLE)_beginthreadex(NULL, 0, &RecvThread, this, 0, NULL);
+	m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, &RecvThread, this, 0, NULL);
 
 	return true;
 }
@@ -70,14 +70,14 @@ void UdpNet::UnInitNet()
 {
 	//退出线程
 	m_isStop = true;
-	if (m_hTHreadHandle)
+	if (m_hThreadHandle)
 	{
-		if (WAIT_TIMEOUT == WaitForSingleObject(m_hTHreadHandle, 100))
+		if (WAIT_TIMEOUT == WaitForSingleObject(m_hThreadHandle, 100))
 		{
-			TerminateThread(m_hTHreadHandle, -1);
+			TerminateThread(m_hThreadHandle, -1);
 		}
-		CloseHandle(m_hTHreadHandle);
-		m_hTHreadHandle = NULL;
+		CloseHandle(m_hThreadHandle);
+		m_hThreadHandle = NULL;
 	}
 	//关闭socket，卸载库
 	if (m_sock && m_sock != INVALID_SOCKET)

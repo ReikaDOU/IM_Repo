@@ -4,6 +4,7 @@
 #include<windows.h>
 #pragma comment(lib,"ws2_32.lib")
 #include"PackDef.h"
+
 class	 INetMediator;//不包含头文件，直接声明类
 class INet
 {
@@ -13,7 +14,7 @@ public:
 	//初始化网络
 	virtual bool InitNet() = 0;
 	//关闭网络
-	virtual void UnlnitNet() = 0;
+	virtual void UnInitNet() = 0;
 	//发送数据
 	virtual bool SendData(long lSendIp, const char* buf, int nLen) = 0;
 protected:

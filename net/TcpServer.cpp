@@ -1,6 +1,7 @@
 #include"TcpServer.h"
 #include"INetMediator.h"
 #include<process.h>
+
 TcpServer::TcpServer(INetMediator* pMediator) :
 	m_sock(INVALID_SOCKET), m_isStop(false)
 {
@@ -122,24 +123,50 @@ bool TcpServer::SendData(long lSendIp, const char* buf, int nLen)
 unsigned int _stdcall TcpServer::RecvThread(void* lpVoid)
 {
 	TcpServer* pThis = (TcpServer*)lpVoid;
-	pThis->RecvData();
-	return 1;
+	//pThis->RecvData();
+
+	//获取套接字、线程ID
+	Sleep(100);//创建线程后立刻执行线程，线程id与套接字载入map需执行时间
+	SOCKET sockWaiter = pThis->m_mapTHreadIDToSocket[GetCurrentThreadId()];
+
+	if (!sockWaiter || sockWaiter == INVALID_SOCKET)
+	{
+		return 1;
+	}
+	int nPackSize = 0;//存储包大小
+	int nRes = 0;
+	int offset = 0;//偏移量
+	pThis->m_isStop = false;
+	while (!pThis->m_isStop)
+	{
+		//先接收包大小，再接收包
+		nRes = recv(sockWaiter, (char*)&nPackSize, sizeof(int), 0);
+		//接收缓冲区拷贝包大小
+		if (nRes <= 0)
+		{
+			break;
+		}
+		char* buf = new char[nPackSize];
+		while (nPackSize)
+		{
+			nRes = recv(sockWaiter, buf + offset, nPackSize, 0);
+			if (nRes > 0)
+			{
+				nPackSize -= nRes;
+				offset += nRes;
+			}
+		}
+		pThis->m_pMediator->DealData(sockWaiter, buf, offset);
+	}
+	
 }
 
 void TcpServer::RecvData()
 {
-	//获取套接字、线程ID
-	Sleep(100);//创建线程后立刻执行线程，线程id与套接字载入map需执行时间
-	SOCKET sockWaiter = m_mapTHreadIDToSocket[GetCurrentThreadId()];
-
-	if (sockWaiter || sockWaiter == INVALID_SOCKET)
-	{
-		return;
-	}
-
 	int nPackSize = 0;//存储包大小
 	int nRes = 0;
 	int offset = 0;//偏移量
+	m_isStop = false;
 	while (!m_isStop)
 	{
 		//先接收包大小，再接收包
@@ -159,21 +186,21 @@ void TcpServer::RecvData()
 				offset += nRes;
 			}
 		}
-		this->m_pMediator->DealData(m_sock, buf, offset);
+		m_pMediator->DealData(m_sock, buf, offset);
 	}
 }
-
 unsigned int _stdcall TcpServer::AcceptThread(void* lpVoid)
 {
 	//网络IO模型、接收连接后、每个客户端需一个线程
 	TcpServer* pThis = (TcpServer*)lpVoid;
 	sockaddr_in addrClient;
 	int nSize = sizeof(addrClient);
+	char aa[100];
 	while (!pThis->m_isStop)
 	{
 		//接收连接
 		SOCKET sockWaiter = accept(pThis->m_sock, (sockaddr*)&addrClient, &nSize);
-		cout << "IP: " << inet_ntoa(addrClient.sin_addr) << "connect" << endl;
+		cout << "IP: " << inet_ntop(AF_INET,(SOCKADDR*)&addrClient.sin_addr,aa,100) << "connect" << endl;
 		//创建接收客户端数据的线程
 		//每一个客户端对应一个线程、一个套接字（对应）
 		//创建线程时，线程ID与套接字绑定形成映射:map

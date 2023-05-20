@@ -1,8 +1,9 @@
 #include"TcpClient.h"
 #include"INetMediator.h"
 #include<process.h>
+#include<iostream>
 TcpClient::TcpClient(INetMediator* pMediator):
-	m_sock(INVALID_SOCKET), m_hTHreadHandle(0), m_isStop(false)
+	m_sock(INVALID_SOCKET), m_hThreadHandle(0), m_isStop(false)
 {
 	m_pMediator = pMediator;
 }
@@ -42,10 +43,12 @@ bool TcpClient::InitNet()
 	int nlen = sizeof(server);
 	server.sin_family = AF_INET;
 	server.sin_port = htons(DEF_TCP_PORT);//
-	server.sin_addr.S_un.S_addr = inet_addr(DEF_SERVER_IP);//
-	result = connect(m_sock, (sockaddr*)&server, nlen);//
+	inet_pton(AF_INET, DEF_SERVER_IP, &server.sin_addr);
+
+	result = connect(m_sock, (SOCKADDR*)&server, nlen);//
 	if (SOCKET_ERROR == result)
 	{
+		std::cout << WSAGetLastError() << std::endl;
 		UnInitNet();
 		return 1;
 	}
@@ -55,9 +58,32 @@ bool TcpClient::InitNet()
 	/* C/C++ RunTime库 strcpy 创建内存块 CreateThread创建的线程不会回收内存块，造成内存泄露
 	ExitThread推出线程  _beginthreadex底层也是调用的CreateThread，退出时调用ExitThread，并且回收创建的内存块	*/
 
-	m_hTHreadHandle = (HANDLE)_beginthreadex(NULL, 0, &RecvThread, this, 0, NULL);
+	m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, &RecvThread, this, 0, NULL);
 
 	return true;
+}
+void TcpClient::UnInitNet()
+{
+	//退出线程
+	m_isStop = true;
+	if (m_hThreadHandle)
+	{
+		if (WAIT_TIMEOUT == WaitForSingleObject(m_hThreadHandle, 100))
+		{
+			TerminateThread(m_hThreadHandle, -1);
+		}
+		CloseHandle(m_hThreadHandle);
+		m_hThreadHandle = NULL;
+	}
+
+	//关闭socket
+	if (m_sock && m_sock != INVALID_SOCKET)
+	{
+		closesocket(m_sock);
+	}
+
+	//卸载库
+	WSACleanup();
 }
 bool TcpClient::SendData(long lSendIp, const char* buf, int nLen)
 {

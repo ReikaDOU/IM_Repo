@@ -17,7 +17,7 @@ protected:
 	//接收数据
 	 void RecvData();
 	 SOCKET m_sock;
-	 HANDLE m_hTHreadHandle;
+	 HANDLE m_hThreadHandle;
 	 bool m_isStop;
 
 };

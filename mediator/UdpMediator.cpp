@@ -20,7 +20,7 @@ bool UdpMediator::OpenNet()
 //关闭网络
 void UdpMediator::CloseNet()
 {
-	m_pNet->UnlnitNet();
+	m_pNet->UnInitNet();
 }
 //发送数据
 bool UdpMediator::SendData(long lSendIp, const char* buf, int nLen)
