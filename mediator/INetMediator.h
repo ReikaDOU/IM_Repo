@@ -10,9 +10,9 @@ public:
 	//关闭网络
 	virtual void CloseNet() = 0;
 	//发送数据
-	virtual bool SendData(long lSendIp, const char* buf, int nLen) = 0;
+	virtual bool SendData(long lSendIp, char* buf, int nLen) = 0;
 	//处理数据
-	virtual void DealData(long lSendIp, const char* buf, int nLen) = 0;
+	virtual void DealData(long lSendIp, char* buf, int nLen) = 0;
 protected:
 	INet* m_pNet;//网络接口指针，用于调用网络函数
 };	

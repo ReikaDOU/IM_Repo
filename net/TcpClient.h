@@ -10,7 +10,7 @@ public:
 	//关闭网络
 	void UnInitNet();
 	//发送数据
-	bool SendData(long lSendIp, const char* buf, int nLen);
+	bool SendData(long lSendIp, char* buf, int nLen);
 protected:
 	static unsigned int  _stdcall RecvThread(void* lpVoid);
 	//接收数据

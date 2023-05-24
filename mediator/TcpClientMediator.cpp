@@ -27,7 +27,7 @@ void TcpClientMediator::CloseNet()
 	m_pNet->UnInitNet();
 }
 
-bool TcpClientMediator::SendData(long lSendIp, const char* buf, int nLen)
+bool TcpClientMediator::SendData(long lSendIp, char* buf, int nLen)
 {
 	if (!m_pNet->SendData(lSendIp, buf, nLen))
 	{
@@ -36,7 +36,7 @@ bool TcpClientMediator::SendData(long lSendIp, const char* buf, int nLen)
 	return true;
 }
 
-void TcpClientMediator::DealData(long lSendIp, const char* buf, int nLen)
+void TcpClientMediator::DealData(long lSendIp, char* buf, int nLen)
 {
 	cout << lSendIp << ":" << buf << endl;
 }

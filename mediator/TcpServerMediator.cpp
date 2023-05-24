@@ -1,16 +1,13 @@
 #include"TcpServerMediator.h"
 #include"TcpServer.h"
+#include"../CKernel.h"
 TcpServerMediator::TcpServerMediator()
 {
 	m_pNet = new TcpServer(this);
 }
 TcpServerMediator::~TcpServerMediator()
 {
-	if (m_pNet)
-	{
-		delete m_pNet;
-		m_pNet = nullptr;
-	}
+	
 }
 
 bool TcpServerMediator::OpenNet()
@@ -27,7 +24,7 @@ void TcpServerMediator::CloseNet()
 	m_pNet->UnInitNet();
 }
 
-bool TcpServerMediator::SendData(long lSendIp, const char* buf, int nLen)
+bool TcpServerMediator::SendData(long lSendIp, char* buf, int nLen)
 {
 	if (!m_pNet->SendData(lSendIp, buf, nLen))
 	{
@@ -36,8 +33,8 @@ bool TcpServerMediator::SendData(long lSendIp, const char* buf, int nLen)
 	return true;
 }
 
-void TcpServerMediator::DealData(long lSendIp, const char* buf, int nLen)
+void TcpServerMediator::DealData(long lSendIp, char* buf, int nLen)
 {
 	cout << lSendIp << ":" << buf << endl;
-	SendData(lSendIp, buf, nLen);
+	CKernel::p_kernel->DealData(lSendIp, buf, nLen);
 }

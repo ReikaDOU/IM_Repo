@@ -16,7 +16,7 @@ public:
 	//关闭网络
 	virtual void UnInitNet() = 0;
 	//发送数据
-	virtual bool SendData(long lSendIp, const char* buf, int nLen) = 0;
+	virtual bool SendData(long lSendIp, char* buf, int nLen) = 0;
 protected:
 	//接收数据
 	virtual void RecvData() = 0;

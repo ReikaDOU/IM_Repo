@@ -88,7 +88,7 @@ void UdpNet::UnInitNet()
 
 }
 //·¢ËÍÊý¾Ý
-bool UdpNet::SendData(long lSendIp, const char* buf, int nLen)
+bool UdpNet::SendData(long lSendIp, char* buf, int nLen)
 {
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;

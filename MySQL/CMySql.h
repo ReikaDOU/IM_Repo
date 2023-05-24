@@ -1,4 +1,5 @@
 #pragma once
+
 #include<mysql.h>
 #include<string>
 #pragma comment(lib,"libmysql.lib")
@@ -14,16 +15,16 @@ public:
 public:                    //ip,用户名,密码，数据库，端口号
     bool  ConnectMySql(const char* host, const char* user, const char* pass, const char* db, short nport = 3306);
     void  DisConnect();
-    bool  SelectMySql(char* szSql,int nColumn,list<string>& lstStr);
-	//获得数据库中的表
-    bool GetTables(char* szSql,list<string>& lstStr);
+    bool  SelectMySql(char* szSql, int nColumn, list<string>& lstStr);
+    //获得数据库中的表
+    bool GetTables(char* szSql, list<string>& lstStr);
     //更新：删除、插入、修改
     bool  UpdateMySql(char* szSql);
- 
+
 private:
-    MYSQL *m_sock;   
-	MYSQL_RES *m_results;   
-	MYSQL_ROW m_record; 
-   
+    MYSQL* m_sock;
+    MYSQL_RES* m_results;
+    MYSQL_ROW m_record;
+
 };
 

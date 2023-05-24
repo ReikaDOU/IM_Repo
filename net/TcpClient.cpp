@@ -85,7 +85,7 @@ void TcpClient::UnInitNet()
 	//卸载库
 	WSACleanup();
 }
-bool TcpClient::SendData(long lSendIp, const char* buf, int nLen)
+bool TcpClient::SendData(long lSendIp, char* buf, int nLen)
 {
 	//判断输入参数合法性
 	if (!buf || nLen <= 0)

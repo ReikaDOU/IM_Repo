@@ -6,7 +6,8 @@
 #define DEF_NAME_SIZE 60
 #define DEF_CONTENT_SIZE 1024
 #define DEF_MAX_SIZE 100
-
+//协议组个数
+#define DEF_PROTOCAL_COUNT (100)
 typedef int PackType;
 //协议头
 #define DEF_PROTOCAL_BASE 1000
@@ -42,6 +43,7 @@ typedef int PackType;
 //注册返回结果
 #define user_is_exist		(0)
 #define register_success	(1)
+#define register_fail		(2)
 //登录返回结果
 #define user_not_exist		(0)
 #define password_error		(1)

@@ -100,23 +100,24 @@ void TcpServer::UnInitNet()
 	WSACleanup();
 }
 
-bool TcpServer::SendData(long lSendIp, const char* buf, int nLen)
+bool TcpServer::SendData(long lSendIp, char* buf, int nLen)
 {
-	//判断输入参数合法性
+	int len1 = nLen;
+	//判断入参合法性
 	if (!buf || nLen <= 0)
 	{
 		return false;
 	}
-	//防止粘包
-	if (send(m_sock, (char*)&nLen, sizeof(int), 0) <= 0)
+	//发包大小
+	if (send(lSendIp, (char*)&len1, sizeof(int), 0) <= 0)
 	{
 		return false;
 	}
-	if (send(m_sock, buf, nLen, 0) <= 0)
+	//发包内容
+	if (send(lSendIp, buf, nLen, 0) <= 0)
 	{
 		return false;
 	}
-
 	return true;
 }
 
